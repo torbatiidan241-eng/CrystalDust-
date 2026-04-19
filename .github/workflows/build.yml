@@ -20,21 +20,21 @@ jobs:
         run: |
           apt-get update
           apt-get install -y build-essential libpng-dev git curl
-          # Install poryscript (dialogue tool)
+          # Manually install poryscript to avoid the 'tools' compilation error
           curl -L https://github.com/huderlem/poryscript/releases/latest/download/poryscript-linux -o /usr/bin/poryscript
           chmod +x /usr/bin/poryscript
 
       - name: Build ROM
         run: |
-          # Fix for the 'multiple definition of gFlash' error
-          export CFLAGS="-fcommon"
-          
-          # Manually create files that the Makefile fails to generate automatically
+          # Create the dummy files the Makefile is looking for to prevent 'No rule to make target'
           mkdir -p sound
           touch sound/songs.mk
           
-          # Force build all tools before starting the ROM
-          make -C tools
+          # Fix for the 'multiple definition of gFlash' error seen in previous runs
+          export CFLAGS="-fcommon"
+          
+          # Skip 'make -C tools' and build the ROM directly
+          # The system will use the poryscript we installed above
           make -j$(nproc)
 
       - name: Upload ROM
