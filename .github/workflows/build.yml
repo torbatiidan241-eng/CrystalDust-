@@ -20,14 +20,16 @@ jobs:
         run: |
           apt-get update
           apt-get install -y build-essential libpng-dev git curl
-          # Download and install Poryscript
-          curl -L https://github.com/huderlem/poryscript/releases/latest/download/poryscript-linux -o /usr/local/bin/poryscript
-          chmod +x /usr/local/bin/poryscript
+          # Install Poryscript directly into the system binaries
+          curl -L https://github.com/huderlem/poryscript/releases/latest/download/poryscript-linux -o /usr/bin/poryscript
+          chmod +x /usr/bin/poryscript
 
       - name: Build ROM
         run: |
           export CFLAGS="-fcommon"
-          # We build the tools first to ensure everything is ready
+          # Satisfy the music/sound requirements manually one last time
+          mkdir -p sound && touch sound/songs.mk
+          # Build tools then the main game
           make -C tools
           make -j$(nproc)
 
