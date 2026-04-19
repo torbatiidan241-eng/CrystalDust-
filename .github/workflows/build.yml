@@ -19,9 +19,10 @@ jobs:
           apt-get update
           apt-get install -y build-essential libpng-dev
 
-      - name: Build ROM
+    - name: Build ROM
         run: |
-          mkdir -p sound
-          touch sound/songs.mk
+          make -C tools clean
           make -C tools -j$(nproc)
-          make -j$(nproc)
+          mkdir -p sound/
+          touch sound/songs.mk
+          make -j$(nproc)  
