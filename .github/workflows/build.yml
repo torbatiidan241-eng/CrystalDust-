@@ -21,12 +21,11 @@ jobs:
 
       - name: Build ROM
         run: |
+          mkdir -p sound
+          touch sound/songs.mk
           make -C tools clean
           make -C tools -j$(nproc)
-          mkdir -p sound/
-          touch sound/songs.mk
           make -j$(nproc)
-
       - name: Upload ROM
         uses: actions/upload-artifact@v4
         with:
