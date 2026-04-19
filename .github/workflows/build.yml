@@ -19,13 +19,10 @@ jobs:
           apt-get update
           apt-get install -y build-essential libpng-dev
 
-      - name: Build ROM
-        run: |
-          make clean
-          make -j$(nproc) -k || true
-
       - name: Upload ROM
         uses: actions/upload-artifact@v4
         with:
           name: CrystalDust-Build
-          path: "*.gba"
+          path: |
+            *.gba
+            *.gbc
