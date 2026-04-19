@@ -14,21 +14,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install build tools
+      - name: Install dependencies
         run: |
           apt-get update
-          apt-get install -y build-essential libpng-dev
+          apt-get install -y build-essential libpng-dev git
 
       - name: Build ROM
         run: |
-          # Manually create the files the Makefile is crying about
-          mkdir -p sound
-          touch sound/songs.mk
-          mkdir -p tools/sound
-          touch tools/songs.mk
-          
-          # Build the tools individually
-          make -C tools
-          
-          # Build the main ROM
-          make
+          # Skip the broken tool-building entirely
+          # We just run the main make command
+          make -j$(nproc)
+
+      - name: Upload ROM
+        uses: actions/upload-artifact@v4
+        with:
+          name: CrystalDust-Build
+          path: |
+            *.gba
+            *.gbc
