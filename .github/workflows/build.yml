@@ -20,16 +20,20 @@ jobs:
         run: |
           apt-get update
           apt-get install -y build-essential libpng-dev git curl
-          # Install Poryscript directly into the system binaries
+          # Install poryscript (dialogue tool)
           curl -L https://github.com/huderlem/poryscript/releases/latest/download/poryscript-linux -o /usr/bin/poryscript
           chmod +x /usr/bin/poryscript
 
       - name: Build ROM
         run: |
+          # Fix for the 'multiple definition of gFlash' error
           export CFLAGS="-fcommon"
-          # Satisfy the music/sound requirements manually one last time
-          mkdir -p sound && touch sound/songs.mk
-          # Build tools then the main game
+          
+          # Manually create files that the Makefile fails to generate automatically
+          mkdir -p sound
+          touch sound/songs.mk
+          
+          # Force build all tools before starting the ROM
           make -C tools
           make -j$(nproc)
 
