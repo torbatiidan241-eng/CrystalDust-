@@ -19,12 +19,16 @@ jobs:
       - name: Install dependencies
         run: |
           apt-get update
-          apt-get install -y build-essential libpng-dev git
+          apt-get install -y build-essential libpng-dev git curl
+          # Download and install Poryscript
+          curl -L https://github.com/huderlem/poryscript/releases/latest/download/poryscript-linux -o /usr/local/bin/poryscript
+          chmod +x /usr/local/bin/poryscript
 
       - name: Build ROM
         run: |
-          # This flag fixes the 'multiple definition of gFlash' error
           export CFLAGS="-fcommon"
+          # We build the tools first to ensure everything is ready
+          make -C tools
           make -j$(nproc)
 
       - name: Upload ROM
