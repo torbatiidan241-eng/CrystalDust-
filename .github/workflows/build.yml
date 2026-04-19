@@ -23,7 +23,7 @@ jobs:
 
       - name: Build ROM
         run: |
-          # We add a flag to help the compiler handle the flash memory code
+          # This flag fixes the 'multiple definition of gFlash' error
           export CFLAGS="-fcommon"
           make -j$(nproc)
 
