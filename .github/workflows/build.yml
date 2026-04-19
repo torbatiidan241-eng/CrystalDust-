@@ -21,11 +21,17 @@ jobs:
 
       - name: Build ROM
         run: |
+          # Step 1: Create the 'songs.mk' file before the system looks for it
           mkdir -p sound
           touch sound/songs.mk
+          
+          # Step 2: Build the specialized encoders
           make -C tools clean
           make -C tools -j$(nproc)
+          
+          # Step 3: Compile the actual game
           make -j$(nproc)
+
       - name: Upload ROM
         uses: actions/upload-artifact@v4
         with:
