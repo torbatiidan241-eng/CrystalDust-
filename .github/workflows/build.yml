@@ -21,8 +21,14 @@ jobs:
 
       - name: Build ROM
         run: |
+          # Manually create the files the Makefile is crying about
           mkdir -p sound
           touch sound/songs.mk
-          make -C tools clean
+          mkdir -p tools/sound
+          touch tools/songs.mk
+          
+          # Build the tools individually
           make -C tools
+          
+          # Build the main ROM
           make
